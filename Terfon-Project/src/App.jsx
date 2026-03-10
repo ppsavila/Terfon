@@ -20,6 +20,51 @@ function App() {
 
     const [showHelp, setShowHelp] = useState(false);
     const [showStats, setShowStats] = useState(() => status !== 'PLAYING');
+    const [copiedText, setCopiedText] = useState(false);
+
+    const generateShareText = () => {
+        const title = `Terfon ${status === 'WON' ? guesses.length : 'X'}/${MAX_ATTEMPTS}`;
+        let grid = '';
+
+        guesses.forEach(guessObj => {
+            guessObj.forEach(letterInfo => {
+                if (letterInfo.state === 'correct') {
+                    grid += '🟩';
+                } else if (letterInfo.state === 'present') {
+                    grid += '🟨';
+                } else {
+                    grid += '⬛';
+                }
+            });
+            grid += '\n';
+        });
+
+        return `${title}\n\n${grid}\nJogue em: https://terfon.vercel.app/`; // Usuário depois ajusta
+    };
+
+    const handleShare = async () => {
+        const text = generateShareText();
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    text: text
+                });
+                return;
+            } catch (err) {
+                console.log('Error sharing:', err);
+            }
+        }
+
+        // Fallback for browsers without share API or PC
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedText(true);
+            setTimeout(() => setCopiedText(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy', err);
+        }
+    };
 
     React.useEffect(() => {
         const isFirstTime = localStorage.getItem('terfon-first-time');
@@ -86,7 +131,7 @@ function App() {
                     <p>O fonema <strong>ɔ</strong> faz parte da palavra mas em outra posição.</p>
                 </div>
                 <div className="rules-note">
-                    <p><strong>Atenção:</strong> Terfon utiliza os fonemas do sotaque <em>Belorizontino (Belo Horizonte, MG)</em>. Palavras como "noite" são transcritas como <strong>n o i tʃ i</strong>.</p>
+                    <p><strong>Atenção:</strong> Terfon utiliza os fones do sotaque <em>Belorizontino (Belo Horizonte, MG)</em>. Palavras como "noite" são transcritas como <strong>n o i tʃ i</strong>.</p>
                 </div>
             </Modal>
 
@@ -96,7 +141,7 @@ function App() {
                     {status === 'LOST' && (
                         <div className="lose-text">
                             <h3>Que pena!</h3>
-                            <p>A palavra era: <strong>{dailyWord.join(' ')}</strong></p>
+                            <p>A palavra era: <strong style={{ textTransform: 'none' }}>{dailyWord.join(' ')}</strong></p>
                         </div>
                     )}
                     <div className="stats-box">
@@ -106,7 +151,12 @@ function App() {
                         </div>
                     </div>
                     {status !== 'PLAYING' && (
-                        <p className="daily-message">Volte amanhã para uma nova palavra!</p>
+                        <>
+                            <p className="daily-message">Volte amanhã para uma nova palavra!</p>
+                            <button className="share-button" onClick={handleShare}>
+                                {copiedText ? 'Copiado!' : 'Compartilhar'}
+                            </button>
+                        </>
                     )}
                 </div>
             </Modal>

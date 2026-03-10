@@ -33,6 +33,7 @@ body {
 
 #root {
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -168,7 +169,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  touch-action: none;
+  touch-action: manipulation;
 }
 
 .keyboard-row {
@@ -423,4 +424,92 @@ body {
   background-color: #FDF1D6;
   padding: 12px;
   border-radius: 8px;
+}
+
+/* Tela de Share */
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--correct-bg);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 24px;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+}
+
+.share-button:active {
+  opacity: 0.8;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 600px) {
+  .cell {
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+  }
+  
+  .key {
+    height: 44px;
+    font-size: 1rem;
+    border-radius: 4px;
+  }
+
+  .key-large {
+    font-size: 0.70rem;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .game-wrapper {
+    padding: 6px 4px;
+  }
+
+  .board {
+    gap: 4px;
+  }
+  
+  .row {
+    gap: 4px;
+  }
+}
+@media (max-height: 700px) {
+  .cell {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+  }
+
+  .key {
+    height: 40px;
+  }
+
+  .keyboard {
+    gap: 4px;
+    padding-bottom: 10px;
+  }
+
+  .header {
+    height: 50px;
+  }
+
+  .board {
+    gap: 4px;
+  }
+  
+  .row {
+    gap: 4px;
+  }
 }
